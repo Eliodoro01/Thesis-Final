@@ -1,0 +1,328 @@
+\chapter{Risultati}
+\label{cap:4}
+
+Questo capitolo presenta i risultati della valutazione comparativa tra
+il modello addestrato con Reflection Tuning e quello addestrato con
+Knowledge Distillation response-based. La valutazione è stata condotta
+su un insieme di 20 domande di ragionamento matematico, giudicate
+da Gemini Flash secondo il paradigma LLM-as-a-Judge descritto nel
+capitolo precedente. Per ciascuna domanda sono stati raccolti punteggi
+su tre metriche (Correctness, Reasoning Quality, Clarity) e un
+giudizio complessivo di vittoria.
+
+
+\section{Risultati Quantitativi}
+\label{sec:risultati_quantitativi}
+
+\subsection{Pipeline sperimentale e dati raccolti}
+\label{subsec:pipeline_risultati}
+
+Prima di presentare i risultati numerici è utile richiamare la
+struttura della pipeline sperimentale, illustrata nella
+Figura~\ref{fig:pipeline} del capitolo precedente.
+Il punto di partenza è il dataset pubblico \textbf{OpenThoughts-114k},
+composto da circa 114\,000 esempi di ragionamento generati da modelli
+di grandi dimensioni. Da questo corpus sono stati estratti e filtrati
+\textbf{700 campioni di training} e \textbf{80 campioni di valutazione},
+selezionando conversazioni con tracce di ragionamento di lunghezza e
+qualità sufficienti a garantire la supervisione del modello.
+
+A partire dagli stessi 700 campioni, la pipeline si biforca in due
+rami paralleli e simmetrici, ciascuno destinato ad addestrare una
+versione distinta di Llama~3.2~1B-Instruct. Nel \textbf{ramo
+Reflection}, le 700 conversazioni originali --- già dotate di un
+blocco \texttt{<thinking>} con il ragionamento esplicito generato
+da modelli di grandi dimensioni --- vengono utilizzate direttamente
+come target di fine-tuning: lo student impara a produrre, per ogni
+domanda, sia la traccia di ragionamento sia la risposta finale,
+replicando la struttura a due stadi del dato originale. Nel \textbf{ramo
+Distillation}, le stesse 700 domande vengono sottoposte a Gemini
+Flash (il modello \emph{teacher}), che restituisce per ciascuna una
+risposta diretta e concisa, priva di ragionamento esplicito: questo
+secondo dataset di 700 coppie domanda--risposta viene usato per
+addestrare lo student secondo il paradigma del \emph{behavior cloning},
+in cui l'obiettivo è imitare lo stile e la correttezza del teacher.
+
+Entrambi i modelli vengono addestrati con \textbf{QLoRA} (rango
+$r = 16$, $\alpha = 32$, quantizzazione 4-bit) per lo stesso numero
+di epoche e con gli stessi iperparametri, in modo da rendere il
+confronto finale attribuibile esclusivamente alla natura del dato
+di training e non a differenze nella procedura di ottimizzazione.
+Al termine del training, i due modelli vengono valutati su un test
+set comune di \textbf{20 domande di ragionamento matematico},
+somministrate a entrambi nello stesso ordine. Le risposte vengono
+giudicate da Gemini Flash secondo il paradigma \textbf{LLM-as-a-Judge}
+\cite{zheng2023judging}: per ogni domanda il giudice assegna un
+punteggio da 1 a 5 su tre metriche (\emph{Correctness},
+\emph{Reasoning Quality}, \emph{Clarity}) e un giudizio complessivo
+di vittoria. La domanda Q18 ha prodotto un errore API durante la
+fase di evaluation e non è inclusa nel calcolo delle medie ($n = 19$).
+
+La Tabella~\ref{tab:medie} riassume i punteggi medi per metrica;
+la Tabella~\ref{tab:winner} riporta la distribuzione dei giudizi
+complessivi; la Tabella~\ref{tab:perdomanda} mostra il dettaglio
+per ciascuna delle 20 domande.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Punteggi medi per metrica (scala 1--5, $n = 19$).}
+  \label{tab:medie}
+  \small
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Metrica} &
+    \textbf{Distillation} &
+    \textbf{Reflection} &
+    \textbf{$\Delta$ (R $-$ D)} \\
+    \midrule
+    Correctness       & 3.89 & 2.74 & $-$1.16 \\
+    Reasoning Quality & 3.74 & 3.05 & $-$0.68 \\
+    Clarity           & 4.11 & 2.42 & $-$1.68 \\
+    \midrule
+    \textbf{Media complessiva} & \textbf{3.91} & \textbf{2.74} & $-$\textbf{1.17} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[tbp]
+  \centering
+  \caption{Distribuzione dei giudizi di vittoria su 19 domande valide.}
+  \label{tab:winner}
+  \small
+  \renewcommand{\arraystretch}{1.4}
+  \begin{tabular}{lcc}
+    \toprule
+    \textbf{Esito} & \textbf{Conteggio} & \textbf{Percentuale} \\
+    \midrule
+    Distillation (A) & 14 & 73.7\% \\
+    Reflection (B)   &  5 & 26.3\% \\
+    Parità (TIE)     &  0 &  0.0\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Il modello di distillation ottiene punteggi superiori in tutte e tre
+le dimensioni valutate e vince in 14 domande su 19 (73.7\%), senza
+alcun pareggio. Il divario più marcato riguarda la metrica
+\emph{Clarity} ($\Delta = -1.68$); il divario minore si osserva sulla
+\emph{Reasoning Quality} ($\Delta = -0.68$), suggerendo che il modello
+reflection, pur perdendo complessivamente, riesce in alcuni casi a
+produrre sequenze di ragionamento di qualità comparabile.
+
+La Tabella~\ref{tab:perdomanda} riporta il dettaglio per domanda.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Punteggi per domanda. C = Correctness, Q = Reasoning Quality,
+    Cl = Clarity. Con * la domanda Q18 per cui il giudice ha restituito
+    un errore API.}
+  \label{tab:perdomanda}
+  \resizebox{\textwidth}{!}{%
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{clccccccl}
+    \toprule
+    \textbf{\#} & \textbf{Domanda (sintesi)} &
+    \textbf{D\,C} & \textbf{D\,Q} & \textbf{D\,Cl} &
+    \textbf{R\,C} & \textbf{R\,Q} & \textbf{R\,Cl} &
+    \textbf{Vincitore} \\
+    \midrule
+    1  & Resto su acquisto mele        & 5 & 2 & 1 & 5 & 4 & 3 & Reflection \\
+    2  & Velocità media treno          & 1 & 1 & 2 & 5 & 5 & 5 & Reflection \\
+    3  & Dimensioni rettangolo         & 1 & 1 & 3 & 5 & 5 & 5 & Reflection \\
+    4  & Numero ragazzi in classe      & 5 & 5 & 5 & 5 & 3 & 2 & Distillation \\
+    5  & Lavoratori e giorni           & 5 & 5 & 5 & 1 & 1 & 1 & Distillation \\
+    6  & Prezzo originale camicia      & 5 & 4 & 3 & 1 & 2 & 2 & Distillation \\
+    7  & Equazione $x + 3 = 10$        & 5 & 5 & 5 & 4 & 5 & 2 & Distillation \\
+    8  & Distanza automobile           & 5 & 5 & 5 & 1 & 2 & 2 & Distillation \\
+    9  & Somma angoli pentagono        & 5 & 5 & 5 & 5 & 3 & 2 & Distillation \\
+    10 & Divisibile per 4 e 6          & 5 & 4 & 4 & 1 & 2 & 3 & Distillation \\
+    11 & Probabilità pallina rossa     & 1 & 2 & 3 & 2 & 4 & 2 & Reflection \\
+    12 & Giorno della settimana        & 1 & 1 & 4 & 2 & 4 & 3 & Reflection \\
+    13 & Altezza scala appoggiata      & 5 & 5 & 5 & 1 & 2 & 1 & Distillation \\
+    14 & Equazione $2(x+4) = 3x-1$     & 5 & 5 & 5 & 1 & 2 & 2 & Distillation \\
+    15 & Farina per biscotti           & 5 & 4 & 4 & 1 & 3 & 2 & Distillation \\
+    16 & 15\% di 240                   & 1 & 3 & 4 & 1 & 2 & 2 & Distillation \\
+    17 & Perimetro quadrato            & 5 & 5 & 5 & 3 & 3 & 2 & Distillation \\
+    18 & Vasca con rubinetto*          & {--} & {--} & {--} & {--} & {--} & {--} & Errore API \\
+    19 & Sequenza geometrica           & 4 & 4 & 5 & 3 & 2 & 2 & Distillation \\
+    20 & Calcolo $f(2)$ con polinomio  & 5 & 5 & 5 & 5 & 4 & 3 & Distillation \\
+    \midrule
+    \multicolumn{2}{l}{\textbf{Media}} &
+    3.89 & 3.74 & 4.11 & 2.74 & 3.05 & 2.42 & \\
+    \bottomrule
+  \end{tabular}}
+\end{table}
+
+\FloatBarrier
+% ------------------------------------------------------------
+\section{Analisi dei Risultati}
+\label{sec:analisi}
+% ------------------------------------------------------------
+
+\subsection{Casi in cui la distillation prevale}
+
+Il modello di distillation vince in 14 domande, con un pattern
+abbastanza netto: nelle domande in cui la risposta richiede un calcolo
+diretto o l'applicazione di una formula elementare (Q4, Q5, Q8, Q9,
+Q13, Q14, Q15, Q17), il modello produce risposte corrette, concise
+e ben strutturate, che il giudice valuta con il massimo punteggio
+su tutte e tre le metriche.
+
+In questi casi il modello reflection produce invece risposte
+spesso errate (Correctness $= 1$) o incomplete, con punteggi di
+Clarity molto bassi (frequentemente 1 o 2). Questo suggerisce che
+il modello da 1B parametri, addestrato su soli 700 campioni, non
+ha appreso in modo stabile il formato \texttt{<thinking>}, generando
+in molti casi output mal strutturati in cui il ragionamento interno
+non converge alla risposta corretta.
+
+Un caso esemplificativo è la domanda Q5 (``Se 5 operai completano
+un lavoro in 8 giorni, quanti giorni occorrono a 10 operai?''):
+il modello di distillation produce la risposta corretta (4 giorni)
+con un ragionamento lineare e punteggi massimi, mentre il modello
+reflection ottiene il punteggio minimo su tutte le metriche,
+indicando un output probabilmente incompleto o incoerente.
+
+\subsection{Casi in cui la reflection prevale}
+
+Il modello reflection vince in 5 domande (Q1, Q2, Q3, Q11, Q12).
+L'analisi di questi casi rivela due sottotipi distinti:
+
+\paragraph{Errori del modello di distillation (Q2, Q3, Q10, Q12).}
+In questi casi il modello di distillation produce una risposta errata
+(Correctness $= 1$), mentre il modello reflection riesce a fornire
+la risposta corretta, probabilmente grazie al ragionamento esplicito
+nel blocco \texttt{<thinking>} che funge da scaffolding per il
+calcolo. La domanda Q2 (velocità media del treno) è un esempio
+rappresentativo: il modello di distillation compie un errore
+aritmetico elementare e produce una risposta sbagliata, mentre il
+modello reflection percorre correttamente i passaggi di calcolo nel
+blocco di thinking e giunge alla risposta esatta.
+
+\paragraph{Parità sulla correttezza, vantaggio sulla qualità del ragionamento (Q1).}
+Nella domanda Q1 entrambi i modelli rispondono correttamente, ma
+il modello di distillation produce una risposta caratterizzata da
+forte ridondanza (lo stesso ragionamento viene ripetuto più volte),
+che il giudice penalizza con Clarity $= 1$ e Reasoning Quality $= 2$.
+Il modello reflection, pur con Clarity inferiore alla media,
+presenta un processo di ragionamento più coerente e viene giudicato
+superiore.
+
+\paragraph{Problemi con ragionamento non deterministico (Q11, Q12).}
+Per le domande sulla probabilità e sul calendario, entrambi i modelli
+mostrano difficoltà (Correctness $\leq 2$ per entrambi), ma il modello
+reflection ottiene punteggi di Reasoning Quality superiori (4 vs.\ 1--2),
+indicando che anche in presenza di una risposta finale errata il
+blocco di thinking mostra un tentativo di ragionamento più articolato.
+
+\subsection{Analisi per tipologia di domanda}
+
+I risultati mostrano una dipendenza dalla tipologia del problema:
+
+\begin{itemize}
+  \item \textbf{Aritmetica diretta e algebra elementare} (Q4, Q7, Q8,
+    Q9, Q14, Q17, Q20): distillation domina con punteggi massimi.
+    Il modello ha appreso efficacemente lo stile conciso di Gemini Flash
+    per problemi a soluzione rapida.
+
+  \item \textbf{Problemi con struttura intermedia} (Q2, Q3, Q6, Q13,
+    Q15): risultati misti. Distillation vince nella maggioranza, ma
+    commette errori su problemi che richiedono più passaggi (Q2, Q3).
+
+  \item \textbf{Ragionamento combinatorio e probabilistico} (Q11, Q12):
+    entrambi i modelli faticano, ma reflection mostra un tentativo
+    di ragionamento più esplicito, sebbene non sempre corretto.
+\end{itemize}
+
+\FloatBarrier
+% ------------------------------------------------------------
+\section{Discussione}
+\label{sec:discussione}
+% ------------------------------------------------------------
+
+\subsection{Interpretazione generale}
+
+I risultati indicano che, nelle condizioni sperimentali di questo
+lavoro, il modello addestrato con knowledge distillation response-based
+da Gemini Flash supera il modello addestrato con reflection tuning
+su quasi tutte le metriche e tipologie di domanda. Tuttavia,
+prima di trarre conclusioni generali, è necessario contestualizzare
+questi risultati rispetto ai vincoli del setup sperimentale.
+
+Il vantaggio della distillation è in larga misura attribuibile alla
+\textbf{qualità assoluta delle risposte del teacher}. Gemini Flash
+è un modello con capacità significativamente superiori a Llama
+3.2 1B, e le sue risposte alle domande di matematica elementare sono
+tendenzialmente corrette, concise e ben strutturate. Il modello
+student ha potuto imitare questo stile in modo efficace, raggiungendo
+punteggi di Clarity molto alti (media 4.11).
+
+Al contrario, il dataset di reflection tuning contiene catene di
+pensiero generate da modelli di reasoning di grandi dimensioni,
+il cui stile verboso e articolato risulta difficile da replicare
+per un modello da 1B parametri con training limitato. Il risultato
+è che il modello reflection produce frequentemente output mal
+strutturati o incompleti, penalizzati su tutte le metriche.
+
+\subsection{Il ruolo del reasoning esplicito}
+
+Nonostante i risultati complessivamente negativi per il reflection
+tuning, i cinque casi in cui questo approccio prevale offrono
+un'indicazione interessante: il ragionamento esplicito nel blocco
+\texttt{<thinking>} sembra fungere da meccanismo di auto-correzione
+su problemi che richiedono più passaggi di calcolo. Quando il modello
+di distillation fallisce su questi problemi (Q2, Q3), il modello
+reflection riesce a trovare la soluzione corretta percorrendo
+esplicitamente i passaggi intermedi.
+
+Questo è coerente con la letteratura sul \emph{chain-of-thought
+prompting} \cite{wei2022chain}, che documenta come il
+ragionamento esplicito migliori le prestazioni sui problemi che
+richiedono composizione di passi. Il limite osservato è che un
+modello da 1B parametri non dispone della capacità sufficiente
+a mantenere un ragionamento coerente per l'intera durata del blocco
+di thinking, degenerando spesso in ripetizioni o divergenze logiche.
+
+\subsection{Confronto con la letteratura}
+
+I risultati sono coerenti con le osservazioni riportate in lavori
+recenti sul \emph{small language model fine-tuning}. Lavori come
+Alpaca \cite{taori2023alpaca} e Vicuna \cite{chiang2023vicuna}
+hanno mostrato che modelli di piccola taglia beneficiano
+significativamente dall'imitazione di risposte di teacher più
+capaci, anche in assenza di soft targets. D'altra parte, la
+superiorità del reflection tuning su modelli di scala maggiore
+è documentata in lavori come DeepSeek-R1 \cite{deepseekr1_2025}
+e OpenAI o1, che adottano architetture e dataset di training
+molto più grandi di quelli disponibili in questo esperimento.
+
+La differenza tra i risultati di questo lavoro e quelli della
+letteratura sul reasoning tuning è quindi spiegabile principalmente
+dalla scala: con modelli da 7B parametri o superiori e dataset
+di training nell'ordine delle decine di migliaia di campioni,
+il reflection tuning mostra vantaggi consistenti che a scala 1B
+non emergono in modo stabile.
+
+\subsection{Limiti dell'interpretazione}
+
+Alcune cautele sono necessarie nell'interpretare questi risultati:
+
+\begin{itemize}
+  \item Il test set è composto da sole 19 domande valide, il che
+    non consente di trarre conclusioni statisticamente significative.
+    La distribuzione 14--5 osservata potrebbe non essere stabile
+    su un insieme di valutazione più ampio.
+
+  \item Il giudice automatico (Gemini Flash) è lo stesso modello
+    utilizzato per generare il dataset di distillation. Non si può
+    escludere un bias stilistico che favorisce risposte simili a
+    quelle che il giudice produce autonomamente.
+
+  \item Le 20 domande coprono esclusivamente matematica e logica
+    elementare. I risultati potrebbero differire su domini diversi,
+    in particolare su problemi che richiedono ragionamento multi-passo
+    più complesso, dove il blocco \texttt{<thinking>} potrebbe
+    offrire un vantaggio maggiore.
+\end{itemize}
+

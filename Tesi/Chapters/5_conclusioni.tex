@@ -1,0 +1,73 @@
+\chapter{Conclusioni}
+\label{cap:5}
+
+Questo lavoro ha confrontato due strategie di fine-tuning per il
+trasferimento di capacità di ragionamento a modelli linguistici di
+piccola taglia: il Reflection Tuning, basato sull'addestramento su
+sequenze con ragionamento esplicito, e la Knowledge Distillation
+response-based, basata sull'imitazione delle risposte di un modello
+teacher più capace.
+
+A partire dal dataset pubblico OpenThoughts-114k, sono stati estratti
+700 campioni di training e 80 di valutazione. Il dataset di
+distillation è stato generato interrogando Gemini Flash come teacher
+su ciascuna delle 700 domande. I due dataset sono stati usati per
+addestrare separatamente due versioni di Llama~3.2~1B-Instruct tramite
+QLoRA, mantenendo identici tutti gli iperparametri. La valutazione
+finale su 20 domande di ragionamento matematico è stata condotta con
+Gemini Flash secondo il paradigma LLM-as-a-Judge \cite{zheng2023judging}.
+
+I risultati mostrano una netta prevalenza del modello addestrato con
+knowledge distillation: su 19 domande valide, il modello di
+distillation vince in 14 casi (73.7\%), con punteggi medi superiori
+in tutte e tre le metriche (Correctness 3.89 vs.\ 2.74, Reasoning
+Quality 3.74 vs.\ 3.05, Clarity 4.11 vs.\ 2.42). Il vantaggio è
+particolarmente marcato sulla Clarity ($\Delta = -1.68$), mentre si
+riduce sulla Reasoning Quality ($\Delta = -0.68$), l'unica dimensione
+in cui il modello reflection mostra risultati competitivi: nei cinque
+casi in cui prevale, il blocco \texttt{<thinking>} sembra fungere da
+meccanismo di auto-correzione su problemi multi-passo. Questi risultati
+sono coerenti con la letteratura: a 1B parametri, l'imitazione diretta
+di un teacher capace produce un comportamento più stabile rispetto
+all'apprendimento di strutture di ragionamento complesse, che richiedono
+scala e dati significativamente maggiori \cite{taori2023alpaca,wei2022chain}.
+
+I risultati devono essere letti considerando i vincoli pratici
+dell'intero lavoro. L'addestramento su Google Colab con GPU Tesla T4
+gratuita ha imposto un tetto alla dimensione del modello utilizzabile:
+architetture di scala superiore, su cui i vantaggi del reflection
+tuning sono documentati in letteratura \cite{deepseekr1_2025}, erano
+fuori portata. Il dataset di 700 campioni è stato vincolato dalla quota
+gratuita dell'API Gemini (15 richieste/minuto) e dai limiti di sessione
+di Colab; la valutazione su 20 domande consente di osservare tendenze
+qualitative ma non conclusioni statisticamente significative. Va inoltre
+precisato che la knowledge distillation implementata è di tipo
+response-based --- lo student impara a imitare le risposte finali ---
+e non incorpora i soft targets della formulazione classica
+\cite{hinton2015distilling}, inaccessibili tramite API commerciali.
+Il confronto è quindi più precisamente descritto come \emph{SFT su
+dati con ragionamento esplicito} vs.\ \emph{SFT su risposte di un
+modello capace}. Infine, il giudice automatico (Gemini Flash) coincide
+con il teacher del modello di distillation, introducendo un potenziale
+bias stilistico non quantificabile in assenza di valutatori indipendenti.
+
+Per approfondimenti futuri, replicare l'esperimento con modelli di
+scala maggiore (7B parametri o superiori) permetterebbe di verificare
+se il vantaggio del reflection tuning emerge in modo più consistente.
+Ampliare il dataset e il test set --- includendo benchmark standardizzati
+come GSM8K \cite{cobbe2021gsm8k} o MATH \cite{hendrycks2021math} ---
+consentirebbe una valutazione più robusta e confrontabile con la
+letteratura. Sarebbe inoltre interessante esplorare un approccio ibrido
+a due stadi: prima il teacher per acquisire correttezza di base, poi
+dati con ragionamento esplicito per sviluppare capacità di auto-correzione.
+
+Nonostante i vincoli, questo lavoro dimostra la fattibilità di una
+pipeline completa di fine-tuning comparativo su hardware consumer-grade.
+Il risultato principale --- la superiorità della distillation
+response-based nelle condizioni adottate --- non confuta il reflection
+tuning, ma indica che scala del modello e dimensione del dataset sono
+fattori determinanti per sfruttare efficacemente il ragionamento
+esplicito nel training. In altre parole, insegnare a un modello piccolo
+a \emph{pensare ad alta voce} richiede che quel modello abbia già la
+capacità di pensare: a 1B parametri, con 700 esempi, quella capacità
+non è ancora sufficiente a tradursi in un vantaggio misurabile.

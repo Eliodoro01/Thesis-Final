@@ -1,0 +1,414 @@
+% ------------------------------------------------------------------------
+% BIBLIOGRAPHY FILE
+% ------------------------------------------------------------------------
+
+% ------------------------------ CHAPTER 1
+
+@inproceedings{krizhevsky2012imagenet,
+  title     = {ImageNet Classification with Deep Convolutional Neural Networks},
+  author    = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E.},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {25},
+  year      = {2012},
+  publisher = {Curran Associates, Inc.}
+}
+
+@article{hochreiter1997long,
+  title     = {Long Short-Term Memory},
+  author    = {Hochreiter, Sepp and Schmidhuber, J{\"u}rgen},
+  journal   = {Neural Computation},
+  volume    = {9},
+  number    = {8},
+  pages     = {1735--1780},
+  year      = {1997},
+  publisher = {MIT Press}
+}
+
+@inproceedings{vaswani2017attention,
+  title     = {Attention Is All You Need},
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {30},
+  year      = {2017},
+  publisher = {Curran Associates, Inc.}
+}
+
+@article{radford2018improving,
+  title       = {Improving Language Understanding by Generative Pre-Training},
+  author      = {Radford, Alec and Narasimhan, Karthik and Salimans, Tim and Sutskever, Ilya},
+  year        = {2018},
+  institution = {OpenAI},
+  note        = {Technical Report, OpenAI}
+}
+
+@article{devlin2018bert,
+  title   = {{BERT}: Pre-training of Deep Bidirectional Transformers for Language Understanding},
+  author  = {Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  journal = {arXiv preprint arXiv:1810.04805},
+  year    = {2018}
+}
+
+@article{brown2020language,
+  title   = {Language Models are Few-Shot Learners},
+  author  = {Brown, Tom and Mann, Benjamin and Ryder, Nick and Subbiah, Melanie and Kaplan, Jared D. and Dhariwal, Prafulla and Neelakantan, Arvind and Shyam, Pranav and Sastry, Girish and Askell, Amanda and others},
+  journal = {Advances in Neural Information Processing Systems},
+  volume  = {33},
+  pages   = {1877--1901},
+  year    = {2020}
+}
+
+@article{kaplan2020scaling,
+  title   = {Scaling Laws for Neural Language Models},
+  author  = {Kaplan, Jared and McCandlish, Sam and Henighan, Tom and Brown, Tom B. and Chess, Benjamin and Child, Rewon and Gray, Scott and Radford, Alec and Wu, Jeffrey and Amodei, Dario},
+  journal = {arXiv preprint arXiv:2001.08361},
+  year    = {2020}
+}
+
+@article{hoffmann2022training,
+  title   = {Training Compute-Optimal Large Language Models},
+  author  = {Hoffmann, Jordan and Borgeaud, Sebastian and Mensch, Arthur and Buchatskaya, Elena and Cai, Trevor and Rutherford, Eliza and de Las Casas, Diego and Hendricks, Lisa Anne and Welbl, Johannes and Clark, Aidan and others},
+  journal = {arXiv preprint arXiv:2203.15556},
+  year    = {2022}
+}
+
+@article{ji2023survey,
+  title     = {Survey of Hallucination in Natural Language Generation},
+  author    = {Ji, Ziwei and Lee, Nayeon and Frieske, Rita and Yu, Tiezheng and Su, Dan and Xu, Yan and Ishii, Etsuko and Bang, Ye Jin and Madotto, Andrea and Fung, Pascale},
+  journal   = {ACM Computing Surveys},
+  volume    = {55},
+  number    = {12},
+  pages     = {1--38},
+  year      = {2023},
+  publisher = {ACM}
+}
+
+@misc{patel2023gpt4,
+  title        = {The Economics of Large Language Models},
+  author       = {Patel, Dylan and Ahmad, Afzal},
+  year         = {2023},
+  howpublished = {SemiAnalysis Blog},
+  note         = {Disponibile su: \url{https://www.semianalysis.com}}
+}
+
+@inproceedings{hinton2015distilling,
+  title     = {Distilling the Knowledge in a Neural Network},
+  author    = {Hinton, Geoffrey and Vinyals, Oriol and Dean, Jeff},
+  booktitle = {NIPS Deep Learning and Representation Learning Workshop},
+  year      = {2015}
+}
+
+@article{ze2023reflection,
+  title   = {Reflection-Tuning: Recycling Data for Better Instruction Tuning},
+  author  = {Ze, Ming and others},
+  journal = {arXiv preprint arXiv:2310.11716},
+  year    = {2023}
+}
+
+@book{kahneman2011thinking,
+  title     = {Thinking, Fast and Slow},
+  author    = {Kahneman, Daniel},
+  year      = {2011},
+  publisher = {Farrar, Straus and Giroux},
+  address   = {New York}
+}
+
+
+% ------------------------------ CHAPTER 2 — Knowledge Distillation
+
+% FitNets: feature-based distillation (Hint Training)
+@article{romero2015fitnets,
+  title   = {{FitNets}: Hints for Thin Deep Nets},
+  author  = {Romero, Adriana and Ballas, Nicolas and Kahou, Samira Ebrahimi and
+             Chassang, Antoine and Gatta, Carlo and Bengio, Yoshua},
+  journal = {arXiv preprint arXiv:1412.6550},
+  year    = {2015}
+}
+
+% DistilBERT: distillazione di BERT
+@article{sanh2019distilbert,
+  title   = {{DistilBERT}, a Distilled Version of {BERT}: Smaller, Faster, Cheaper and Lighter},
+  author  = {Sanh, Victor and Debut, Lysandre and Chaumond, Julien and Wolf, Thomas},
+  journal = {arXiv preprint arXiv:1910.01108},
+  year    = {2019}
+}
+
+% TinyBERT: KD per Transformer a livello di layer
+@article{jiao2020tinybert,
+  title   = {{TinyBERT}: Distilling {BERT} for Natural Language Understanding},
+  author  = {Jiao, Xiaoqi and Yin, Yichun and Shang, Lifeng and Jiang, Xin and
+             Chen, Xiao and Li, Linlin and Wang, Fang and Liu, Qun},
+  journal = {arXiv preprint arXiv:1909.10351},
+  year    = {2020}
+}
+
+% Patient Knowledge Distillation
+@article{sun2019patient,
+  title   = {Patient Knowledge Distillation for {BERT} Model Compression},
+  author  = {Sun, Siqi and Cheng, Yu and Gan, Zhe and Liu, Jingjing},
+  journal = {arXiv preprint arXiv:1908.09355},
+  year    = {2019}
+}
+
+% Relational Knowledge Distillation
+@inproceedings{park2019relational,
+  title     = {Relational Knowledge Distillation},
+  author    = {Park, Wonpyo and Kim, Dongju and Lu, Yan and Cho, Minsu},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  pages     = {3967--3976},
+  year      = {2019}
+}
+
+% Teacher Assistant per bridging capacity gap
+@article{mirzadeh2020improved,
+  title   = {Improved Knowledge Distillation via Teacher Assistant},
+  author  = {Mirzadeh, Seyed Iman and Farajtabar, Mehrdad and Li, Ang and
+             Levine, Nir and Matsukawa, Akihiro and Ghasemzadeh, Hassan},
+  journal = {arXiv preprint arXiv:1902.03393},
+  year    = {2020}
+}
+
+% MiniLLM: KD per Large Language Models
+@article{gu2023minillm,
+  title   = {{MiniLLM}: Knowledge Distillation of Large Language Models},
+  author  = {Gu, Yuxian and Dong, Li and Wei, Furu and Huang, Minlie},
+  journal = {arXiv preprint arXiv:2306.08543},
+  year    = {2023}
+}
+
+% Distilling Step by Step (task-aware KD)
+@article{hsieh2023distilling,
+  title   = {Distilling Step-by-Step! Outperforming Larger Language Models
+             with Less Training Data and Smaller Model Sizes},
+  author  = {Hsieh, Cheng-Yu and Li, Chun-Liang and Yeh, Chih-kuan and
+             Nakhost, Hootan and Fujii, Yasuhisa and Ratner, Alexander and
+             Krishna, Ranjay and Lee, Chen-Yu and Pfister, Tomas},
+  journal = {arXiv preprint arXiv:2212.08073},
+  year    = {2023}
+}
+
+
+% ------------------------------ CHAPTER 2 — Instruction Tuning e RLHF
+
+% FLAN: Instruction Tuning zero-shot
+@article{wei2022finetuned,
+  title   = {Finetuned Language Models Are Zero-Shot Learners},
+  author  = {Wei, Jason and Bosma, Maarten and Zhao, Vincent and Guu, Kelvin and
+             Yu, Adams Wei and Lester, Brian and Du, Nan and Dai, Andrew M. and Le, Quoc V.},
+  journal = {arXiv preprint arXiv:2109.01652},
+  year    = {2022}
+}
+
+% InstructGPT: RLHF
+@article{ouyang2022training,
+  title   = {Training Language Models to Follow Instructions with Human Feedback},
+  author  = {Ouyang, Long and Wu, Jeffrey and Jiang, Xu and Almeida, Diogo and
+             Wainwright, Carroll and Mishkin, Pamela and Zhang, Chong and
+             Agarwal, Sandhini and Slama, Katarina and Ray, Alex and others},
+  journal = {arXiv preprint arXiv:2203.02155},
+  year    = {2022}
+}
+
+% Self-Instruct: generazione automatica di instruction data
+@article{wang2022self,
+  title   = {Self-Instruct: Aligning Language Models with Self-Generated Instructions},
+  author  = {Wang, Yizhong and Kordi, Yeganeh and Mishra, Swaroop and Liu, Alisa and
+             Smith, Noah A. and Khashabi, Daniel and Hajishirzi, Hannaneh},
+  journal = {arXiv preprint arXiv:2212.10560},
+  year    = {2022}
+}
+
+
+% ------------------------------ CHAPTER 2 — PEFT e LoRA
+
+% Adapter layers (primo PEFT)
+@article{houlsby2019parameter,
+  title   = {Parameter-Efficient Transfer Learning for {NLP}},
+  author  = {Houlsby, Neil and Giurgiu, Andrei and Jastrzebski, Stanislaw and
+             Morrone, Bruna and de Laroussilhe, Quentin and Gesmundo, Andrea and
+             Attariyan, Mona and Gelly, Sylvain},
+  journal = {arXiv preprint arXiv:1902.00751},
+  year    = {2019}
+}
+
+% Prefix Tuning
+@article{li2021prefix,
+  title   = {Prefix-Tuning: Optimizing Continuous Prompts for Generation},
+  author  = {Li, Xiang Lisa and Liang, Percy},
+  journal = {arXiv preprint arXiv:2101.00190},
+  year    = {2021}
+}
+
+% Prompt Tuning
+@article{lester2021power,
+  title   = {The Power of Scale for Parameter-Efficient Prompt Tuning},
+  author  = {Lester, Brian and Al-Rfou, Rami and Constant, Noah},
+  journal = {arXiv preprint arXiv:2104.08691},
+  year    = {2021}
+}
+
+
+% ------------------------------ CHAPTER 2 — Reflection Tuning e Self-Correction
+
+% Self-Refine: iterative refinement con LLM
+@article{madaan2023self,
+  title   = {Self-Refine: Iterative Refinement with Self-Feedback},
+  author  = {Madaan, Aman and Tandon, Niket and Gupta, Prakhar and Hallinan, Skye and
+             Gao, Luyu and Wiegreffe, Sarah and Alon, Uri and Dziri, Nouha and
+             Prabhumoye, Shrimai and Yang, Yiming and others},
+  journal = {arXiv preprint arXiv:2303.17651},
+  year    = {2023}
+}
+
+% Reflexion: agente con memoria verbale e auto-riflessione
+@article{shinn2023reflexion,
+  title   = {Reflexion: Language Agents with Verbal Reinforcement Learning},
+  author  = {Shinn, Noah and Cassano, Federico and Gopinath, Ashwin and
+             Narasimhan, Karthik and Yao, Shunyu},
+  journal = {arXiv preprint arXiv:2303.11366},
+  year    = {2023}
+}
+
+% STaR: bootstrapping del reasoning tramite autoriflessione
+@article{zelikman2022star,
+  title   = {{STaR}: Bootstrapping Reasoning With Reasoning},
+  author  = {Zelikman, Eric and Wu, Yuhuai and Mu, Jesse and Goodman, Noah D.},
+  journal = {arXiv preprint arXiv:2203.14465},
+  year    = {2022}
+}
+
+% Zero-shot Chain of Thought ("Let's think step by step")
+@article{kojima2022large,
+  title   = {Large Language Models are Zero-Shot Reasoners},
+  author  = {Kojima, Takeshi and Gu, Shixiang Shane and Reid, Machel and
+             Matsuo, Yutaka and Iwasawa, Yusuke},
+  journal = {arXiv preprint arXiv:2205.11916},
+  year    = {2022}
+}
+
+
+% ------------------------------ CHAPTER 2 — Modelli LLM di riferimento
+
+% LLaMA
+@article{touvron2023llama,
+  title   = {{LLaMA}: Open and Efficient Foundation Language Models},
+  author  = {Touvron, Hugo and Lavril, Thibaut and Izacard, Gautier and
+             Martinet, Xavier and Lachaux, Marie-Anne and Lacroix, Timoth{\'e}e and
+             Rozi{\`e}re, Baptiste and Goyal, Naman and Hambro, Eric and Azhar, Faisal and others},
+  journal = {arXiv preprint arXiv:2302.13971},
+  year    = {2023}
+}
+
+% LLaMA 2
+@article{touvron2023llama2,
+  title   = {{Llama} 2: Open Foundation and Fine-Tuned Chat Models},
+  author  = {Touvron, Hugo and Martin, Louis and Stone, Kevin and Albert, Peter and
+             Almahairi, Amjad and Babaei, Yasmine and Bashlykov, Nikolay and
+             Batra, Soumya and Bhargava, Prajjwal and Bhosale, Shruti and others},
+  journal = {arXiv preprint arXiv:2307.09288},
+  year    = {2023}
+}
+
+% GPT-4 Technical Report
+@article{achiam2023gpt4,
+  title   = {{GPT-4} Technical Report},
+  author  = {Achiam, Josh and Adler, Steven and Agarwal, Sandhini and Ahmad, Lama and
+             Akkaya, Ilge and Aleman, Florencia Leoni and Almeida, Diogo and
+             Altenschmidt, Janko and Altman, Sam and Anadkat, Shyamal and others},
+  journal = {arXiv preprint arXiv:2303.08774},
+  year    = {2023}
+}
+
+
+% ------------------------------ CHAPTERS 2-3 (Tecnologie, Applicazione)
+
+@article{hu2021lora,
+  title   = {{LoRA}: Low-Rank Adaptation of Large Language Models},
+  author  = {Hu, Edward J. and Shen, Yelong and Wallis, Phillip and Allen-Zhu, Zeyuan and
+             Li, Yuanzhi and Wang, Shean and Wang, Lu and Chen, Weizhu},
+  journal = {arXiv preprint arXiv:2106.09685},
+  year    = {2021}
+}
+
+@article{dettmers2023qlora,
+  title   = {{QLoRA}: Efficient Finetuning of Quantized {LLMs}},
+  author  = {Dettmers, Tim and Pagnoni, Artidoro and Holtzman, Ari and Zettlemoyer, Luke},
+  journal = {arXiv preprint arXiv:2305.14314},
+  year    = {2023}
+}
+
+@article{wei2022chain,
+  title   = {Chain-of-Thought Prompting Elicits Reasoning in Large Language Models},
+  author  = {Wei, Jason and Wang, Xuezhi and Schuurmans, Dale and Bosma, Maarten and
+             Ichter, Brian and Xia, Fei and Chi, Ed and Le, Quoc and Zhou, Denny},
+  journal = {arXiv preprint arXiv:2201.11903},
+  year    = {2022}
+}
+
+@article{zheng2023judging,
+  title   = {Judging {LLM}-as-a-Judge with {MT-Bench} and Chatbot Arena},
+  author  = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and Zhuang, Siyuan and
+             Wu, Zhanghao and Zhuang, Yonghao and Lin, Zi and Li, Zhuohan and
+             Li, Dacheng and Xing, Eric P. and Zhang, Hao and Gonzalez, Joseph E. and
+             Stoica, Ion},
+  journal = {arXiv preprint arXiv:2306.05685},
+  year    = {2023}
+}
+
+@misc{meta2024llama32,
+  title        = {Llama 3.2: Lightweight and Vision Models},
+  author       = {{Meta AI}},
+  year         = {2024},
+  howpublished = {\url{https://ai.meta.com/blog/llama-3-2-connect-2024-vision-edge-mobile-devices/}}
+}
+
+@misc{openthoughts2024,
+  title        = {{OpenThoughts-114k}: Open Dataset for Reasoning},
+  author       = {{Open Thoughts Team}},
+  year         = {2024},
+  howpublished = {\url{https://huggingface.co/datasets/open-thoughts/OpenThoughts-114k}}
+}
+
+@misc{taori2023alpaca,
+  title        = {Alpaca: A Strong, Replicable Instruction-Following Model},
+  author       = {Taori, Rohan and Gulrajani, Ishaan and Zhang, Tianyi and Dubois, Yann and
+                  Li, Xuechen and Guestrin, Carlos and Liang, Percy and Hashimoto, Tatsunori B.},
+  year         = {2023},
+  howpublished = {\url{https://crfm.stanford.edu/2023/03/13/alpaca.html}}
+}
+
+@misc{chiang2023vicuna,
+  title        = {Vicuna: An Open-Source Chatbot Impressing {GPT-4} with 90\% {ChatGPT} Quality},
+  author       = {Chiang, Wei-Lin and Li, Zhuohan and Lin, Zi and Sheng, Ying and
+                  Wu, Zhanghao and Zhang, Hao and Zheng, Lianmin and Zhuang, Siyuan and
+                  Zhuang, Yonghao and Gonzalez, Joseph E. and Stoica, Ion and Xing, Eric P.},
+  year         = {2023},
+  howpublished = {\url{https://lmsys.org/blog/2023-03-30-vicuna/}}
+}
+
+
+% ------------------------------ CHAPTERS 4-5 (Risultati, Conclusioni)
+
+@article{deepseekr1_2025,
+  title   = {{DeepSeek-R1}: Incentivizing Reasoning Capability in {LLMs}
+             via Reinforcement Learning},
+  author  = {{DeepSeek-AI}},
+  journal = {arXiv preprint arXiv:2501.12948},
+  year    = {2025}
+}
+
+@article{cobbe2021gsm8k,
+  title   = {Training Verifiers to Solve Math Word Problems},
+  author  = {Cobbe, Karl and Kosaraju, Vineet and Bavarian, Mohammad and Chen, Mark and
+             Jun, Heewoo and Kaiser, Lukasz and Plappert, Matthias and Tworek, Jerry and
+             Hilton, Jacob and Nakano, Reiichiro and Hesse, Christopher and Schulman, John},
+  journal = {arXiv preprint arXiv:2110.14168},
+  year    = {2021}
+}
+
+@article{hendrycks2021math,
+  title   = {Measuring Mathematical Problem Solving With the {MATH} Dataset},
+  author  = {Hendrycks, Dan and Burns, Collin and Kadavath, Saurav and Arora, Akul and
+             Basart, Steven and Tang, Eric and Song, Dawn and Steinhardt, Jacob},
+  journal = {arXiv preprint arXiv:2103.03874},
+  year    = {2021}
+}
