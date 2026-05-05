@@ -1,0 +1,26 @@
+# macOS metadata
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+__MACOSX/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Training artifacts (intermediate checkpoints — keep final models)
+models/reflection_lora_output/
+models/distillation_lora_output/
+
+# IDE
+.vscode/
+.idea/
