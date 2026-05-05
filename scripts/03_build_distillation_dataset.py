@@ -15,8 +15,8 @@ Esegui DOPO step1_filter_dataset.py
 import json
 import re
 
-INPUT_FILE  = "dataset_reflection_train.json"
-OUTPUT_FILE = "dataset_distillation_train.json"
+INPUT_FILE  = "data/reflection_train.json"
+OUTPUT_FILE = "data/distillation_train.json"
 
 with open(INPUT_FILE, "r", encoding="utf-8") as f:
     reflection_data = json.load(f)
@@ -53,7 +53,7 @@ with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
 print(f"Dataset distillation salvato: {OUTPUT_FILE}")
 print(f"   Sample totali:  {len(distillation_data)}")
 print(f"   Sample scartati: {skipped}")
-print(f"   (deve coincidere con dataset_reflection_train.json: {len(reflection_data)} sample)")
+print(f"   (deve coincidere con data/reflection_train.json: {len(reflection_data)} sample)")
 
 # Verifica: mostra un esempio
 print("\n--- ESEMPIO (distillation[0]) ---")

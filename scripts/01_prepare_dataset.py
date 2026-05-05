@@ -13,8 +13,8 @@ from datasets import load_dataset
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 TARGET_SAMPLES   = 700
 SEED             = 42
-OUTPUT_FILE      = "dataset_reflection_train.json"
-EVAL_FILE        = "dataset_reflection_eval.json"
+OUTPUT_FILE      = "data/reflection_train.json"
+EVAL_FILE        = "data/reflection_eval.json"
 EVAL_SIZE        = 80
 MIN_THINKING_LEN = 300
 MAX_THINKING_LEN = 6000

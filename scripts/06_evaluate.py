@@ -13,6 +13,7 @@ Requisiti:
 """
 
 import json
+import os
 import time
 import torch
 import pandas as pd
@@ -21,12 +22,12 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from peft import PeftModel
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-GEMINI_API_KEY      = "AIzaSyD_puPyCpPgqb_oUh-BVDDf22Sr4LGp8p4"    
+GEMINI_API_KEY      = os.environ.get("GEMINI_API_KEY", "")  # export GEMINI_API_KEY=your_key
 BASE_MODEL_NAME     = "unsloth/Llama-3.2-1B-Instruct"
-REFLECTION_LORA     = "./reflection_model_final"         # LoRA salvato nel step 2
-DISTILLATION_LORA   = "./distillation_model_final"       # LoRA salvato nel step 2b
-EVAL_DATASET        = "dataset_reflection_eval.json"
-OUTPUT_CSV          = "evaluation_results.csv"
+REFLECTION_LORA     = "models/reflection"                 # LoRA salvato nel step 2
+DISTILLATION_LORA   = "models/distillation"              # LoRA salvato nel step 2b
+EVAL_DATASET        = "data/reflection_eval.json"
+OUTPUT_CSV          = "results/evaluation_results.csv"
 MAX_NEW_TOKENS      = 512
 # ─────────────────────────────────────────────────────────────────────────────
 

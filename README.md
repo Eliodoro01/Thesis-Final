@@ -96,7 +96,7 @@ Reflection's 5 wins occurred on simpler problems and select multi-step algebra q
 
 | Question Sample | Results Overview |
 |:---:|:---:|
-| ![Eval 1](screen/evaluation%20(1).png) | ![Eval 2](screen/evaluation%20(2).png) |
+| ![Eval 1](results/screenshots/evaluation_1.png) | ![Eval 2](results/screenshots/evaluation_2.png) |
 
 ---
 
@@ -117,34 +117,40 @@ Reflection's 5 wins occurred on simpler problems and select multi-step algebra q
 ```
 Thesis-Final/
 │
-├── Tesi/                           # LaTeX source for the thesis document
-│   ├── thesis.tex                  # Main document
-│   ├── Chapters/                   # 5 chapters + acknowledgments
+├── Tesi/                               # LaTeX source for the thesis document
+│   ├── thesis.tex                      # Main document
+│   ├── Chapters/                       # 5 chapters + acknowledgments
 │   │   ├── 1_introduzione.tex
 │   │   ├── 2_tecnologie.tex
 │   │   ├── 3_applicazione.tex
 │   │   ├── 4_risultati.tex
 │   │   └── 5_conclusioni.tex
-│   ├── Figs/                       # Architecture diagrams & figures
-│   └── References/references.bib  # Bibliography
+│   ├── Figs/                           # Architecture diagrams & figures
+│   └── References/references.bib      # Bibliography
 │
-├── prepare_dataset.py              # Step 1: Filter OpenThoughts-114k → 700 samples
-├── generate_teacher_responses.py   # Step 1b: Query Gemini Flash (distillation branch)
-├── build_distillation_dataset.py   # Step 1c: Assemble distillation training set
-├── train_reflection.py             # Step 2: QLoRA training — Reflection model
-├── train_distillation.py           # Step 2b: QLoRA training — Distillation model
-├── evaluate.py                     # Step 3: LLM-as-a-Judge evaluation
+├── scripts/                            # Pipeline scripts (ordered by step)
+│   ├── 01_prepare_dataset.py           # Step 1:  Filter OpenThoughts-114k → 700 samples
+│   ├── 02_generate_teacher_responses.py# Step 2:  Query Gemini Flash (distillation branch)
+│   ├── 03_build_distillation_dataset.py# Step 3:  Assemble distillation training set
+│   ├── 04_train_reflection.py          # Step 4a: QLoRA training — Reflection model
+│   ├── 05_train_distillation.py        # Step 4b: QLoRA training — Distillation model
+│   ├── 06_evaluate.py                  # Step 5:  LLM-as-a-Judge evaluation
+│   ├── create_presentation.py          # Generate PowerPoint slides
+│   └── archive/                        # Older script versions
 │
-├── dataset_reflection_train.json   # 700 training examples with <thinking> blocks
-├── dataset_reflection_eval.json    # 80 evaluation examples
-├── dataset_distillation_train.json # 700 question-answer pairs from Gemini Flash
-├── dataset_distillation_checkpoint.json  # API checkpoint for resume support
+├── data/                               # Training & evaluation datasets
+│   ├── reflection_train.json           # 700 training examples with <thinking> blocks
+│   ├── reflection_eval.json            # 80 evaluation examples
+│   ├── distillation_train.json         # 700 question-answer pairs from Gemini Flash
+│   └── distillation_checkpoint.json    # API checkpoint for resume support
 │
-├── evaluation_results.csv          # Full evaluation table (20 questions × 10 metrics)
-├── screen/                         # Screenshots from evaluation runs
+├── results/                            # Outputs
+│   ├── evaluation_results.csv          # Full evaluation table (20 questions × 10 metrics)
+│   └── screenshots/                    # Screenshots from evaluation runs
 │
-├── reflection_model_final/         # Trained LoRA adapter — Reflection model
-└── distillation_model_final/       # Trained LoRA adapter — Distillation model
+└── models/                             # Trained LoRA adapters
+    ├── reflection/                     # Reflection Tuning adapter
+    └── distillation/                   # Knowledge Distillation adapter
 ```
 
 ---
@@ -155,8 +161,8 @@ Both fine-tuned LoRA adapters are included in this repository and can be loaded 
 
 | Model | Base | Method | Training Data | Overall Score |
 |---|---|---|---|:---:|
-| [`reflection_model_final`](./reflection_model_final/) | Llama 3.2 1B-Instruct | Reflection Tuning | 700 samples w/ `<thinking>` | 2.74 / 5 |
-| [`distillation_model_final`](./distillation_model_final/) | Llama 3.2 1B-Instruct | Knowledge Distillation | 700 Gemini Flash responses | 3.91 / 5 |
+| [`models/reflection`](./models/reflection/) | Llama 3.2 1B-Instruct | Reflection Tuning | 700 samples w/ `<thinking>` | 2.74 / 5 |
+| [`models/distillation`](./models/distillation/) | Llama 3.2 1B-Instruct | Knowledge Distillation | 700 Gemini Flash responses | 3.91 / 5 |
 
 ### Quick Usage
 
@@ -165,7 +171,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
 base_model_id = "unsloth/llama-3.2-1b-instruct-unsloth-bnb-4bit"
-adapter_path   = "./distillation_model_final"   # or ./reflection_model_final
+adapter_path   = "models/distillation"   # or models/reflection
 
 tokenizer = AutoTokenizer.from_pretrained(base_model_id)
 base      = AutoModelForCausalLM.from_pretrained(base_model_id, device_map="auto")
@@ -190,30 +196,34 @@ pip install "trl<0.9.0" peft google-genai pandas
 ```
 
 A GPU is required for training. The experiments were run on a **Google Colab T4 (16 GB VRAM)**.  
-A Gemini API key is required for generating distillation data and running evaluation.
+A Gemini API key is required for steps 2 and 5 — set it via environment variable:
+
+```bash
+export GEMINI_API_KEY=your_key_here   # Linux/macOS
+$env:GEMINI_API_KEY="your_key_here"   # Windows PowerShell
+```
 
 ### Step-by-step
 
 ```bash
-# 1. Prepare base dataset (filters OpenThoughts-114k)
-python prepare_dataset.py
+# Step 1 — Prepare base dataset (filters OpenThoughts-114k → 700 samples)
+python scripts/01_prepare_dataset.py
 
-# 2a. Generate teacher responses for distillation
-#     Set GEMINI_API_KEY in the script first
-python generate_teacher_responses.py
+# Step 2 — Generate teacher responses for distillation (calls Gemini Flash)
+python scripts/02_generate_teacher_responses.py
 
-# 2b. Assemble distillation training set
-python build_distillation_dataset.py
+# Step 3 — Assemble distillation training set
+python scripts/03_build_distillation_dataset.py
 
-# 3a. Train reflection model (best run on Colab GPU)
-python train_reflection.py
+# Step 4a — Train Reflection model (best run on Colab GPU)
+python scripts/04_train_reflection.py
 
-# 3b. Train distillation model
-python train_distillation.py
+# Step 4b — Train Distillation model
+python scripts/05_train_distillation.py
 
-# 4. Run evaluation
-python evaluate.py
-# → Outputs: evaluation_results.csv
+# Step 5 — Run LLM-as-a-Judge evaluation
+python scripts/06_evaluate.py
+# → Outputs: results/evaluation_results.csv
 ```
 
 ---

@@ -27,9 +27,9 @@ GRAD_ACCUM      = 4
 LEARNING_RATE   = 2e-4
 NUM_EPOCHS      = 3
 WARMUP_RATIO    = 0.05
-OUTPUT_DIR      = "./distillation_lora_output"
-DATASET_PATH    = "dataset_distillation_train.json"   # ← unica differenza
-SAVE_PATH       = "./distillation_model_final"
+OUTPUT_DIR      = "models/distillation_lora_output"
+DATASET_PATH    = "data/distillation_train.json"       # ← unica differenza
+SAVE_PATH       = "models/distillation"
 # ─────────────────────────────────────────────────────────────────────────────
 
 model, tokenizer = FastLanguageModel.from_pretrained(
@@ -105,8 +105,8 @@ model.save_pretrained(SAVE_PATH)
 tokenizer.save_pretrained(SAVE_PATH)
 print(f"Modello salvato in: {SAVE_PATH}")
 
-# Salva su Drive
-from google.colab import drive
-drive.mount('/content/drive')
-model.save_pretrained("/content/drive/MyDrive/rifacimento/distillation_model_final")
-tokenizer.save_pretrained("/content/drive/MyDrive/rifacimento/distillation_model_final")
+# Salva su Google Drive (solo in Colab)
+# from google.colab import drive
+# drive.mount('/content/drive')
+# model.save_pretrained("/content/drive/MyDrive/distillation_model_final")
+# tokenizer.save_pretrained("/content/drive/MyDrive/distillation_model_final")

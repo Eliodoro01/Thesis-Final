@@ -609,6 +609,6 @@ tb(sl,
    align=PP_ALIGN.CENTER)
 
 # ─── SALVATAGGIO ──────────────────────────────────────────────────────────────
-out = "/Users/eliodoro/Desktop/Tesi COMPLETA Mascolo Eliodro/Presentazione_Laurea_Mascolo.pptx"
+out = "results/Presentazione_Laurea_Mascolo.pptx"
 prs.save(out)
 print(f"Salvato: {out}")

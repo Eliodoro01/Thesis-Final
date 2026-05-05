@@ -27,10 +27,10 @@ from google import genai
 from google.genai import types
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
-GEMINI_API_KEY       = "AIzaSyD_puPyCpPgqb_oUh-BVDDf22Sr4LGp8p4"   # da https://ai.google.dev
-INPUT_FILE           = "dataset_reflection_train.json"
-OUTPUT_FILE          = "dataset_distillation_train.json"
-CHECKPOINT_FILE      = "dataset_distillation_checkpoint.json"  # resume se si interrompe
+GEMINI_API_KEY       = os.environ.get("GEMINI_API_KEY", "")  # export GEMINI_API_KEY=your_key
+INPUT_FILE           = "data/reflection_train.json"
+OUTPUT_FILE          = "data/distillation_train.json"
+CHECKPOINT_FILE      = "data/distillation_checkpoint.json"     # resume se si interrompe
 REQUESTS_PER_MINUTE  = 14        # quota free tier Gemini Flash: 15 RPM, stai sotto
 SLEEP_BETWEEN_CALLS  = 60 / REQUESTS_PER_MINUTE   # ~4.3 secondi tra chiamate
 MAX_RETRIES          = 3

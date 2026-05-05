@@ -26,8 +26,8 @@ GRAD_ACCUM      = 4
 LEARNING_RATE   = 2e-4
 NUM_EPOCHS      = 3
 WARMUP_RATIO    = 0.05
-OUTPUT_DIR      = "./reflection_lora_output"
-DATASET_PATH    = "dataset_reflection_train.json"
+OUTPUT_DIR      = "models/reflection_lora_output"
+DATASET_PATH    = "data/reflection_train.json"
 # ─────────────────────────────────────────────────────────────────────────────
 
 print(f"GPU: {torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'NESSUNA'}")
@@ -109,7 +109,7 @@ print(f"   Tempo: {trainer_stats.metrics['train_runtime']:.0f}s")
 print(f"   Loss:  {trainer_stats.metrics['train_loss']:.4f}")
 
 # ── CELLA 6: Salva modello ────────────────────────────────────────────────────
-SAVE_PATH = "./reflection_model_final"
+SAVE_PATH = "models/reflection"
 model.save_pretrained(SAVE_PATH)
 tokenizer.save_pretrained(SAVE_PATH)
 print(f"Modello salvato in: {SAVE_PATH}")
